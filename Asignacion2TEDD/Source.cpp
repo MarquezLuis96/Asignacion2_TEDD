@@ -54,7 +54,6 @@ template <class dataType>
 bool Pila<dataType>::limpiarPila() {
 	Nodo* aux;
 	if (pilaVacia()) {
-		cerr << "Error: La pila ya se encuentra vacia." << endl;
 		return false;
 	}
 
@@ -82,7 +81,7 @@ template <class dataType>
 dataType Pila<dataType>::pop() {
 	if (pilaVacia()) {
 		cerr << "ERROR: UNDERFLOW - Pila vacia, no se puede extraer el elemento." << endl;
-		return NULL;
+		throw std::invalid_argument("Underflow");
 	}
 
 	dataType aux = tope->dato;
@@ -194,8 +193,103 @@ void Inventario::imprimirInventario() {
 	delete prod;
 }
 
+void Inventario::modificarPrecio() {
+	int id;
+	int changeto;
+	Producto* prod;
+	prod = new Producto;
+	long cantidadDeStock = nRegistros(*prod);
+	Pila<Producto> pilaInicial, pilaFinal;
+	imprimirInventario();
+
+	cout << "Teclee el ID del producto al cual desea modificar el precio: ";
+	cin >> id;
+	cout << endl;
+
+	cout << "Teclee el nuevo precio del producto: ";
+	cin >> changeto;
+	cout << endl;
+
+	for (long i = 0; i < cantidadDeStock; i++) {
+		buscarRegistro(*prod, i);
+		if (prod->id == id) {
+			prod->precio = changeto;
+			pilaInicial.push(*prod);
+		}
+		else {
+			pilaInicial.push(*prod);
+		}
+	}
+
+	for (long i = 0; i < cantidadDeStock; i++) {
+		pilaFinal.push(pilaInicial.pop());
+	}
+
+	inventario.open("inventario.bin", ios::out | ios::trunc);
+	inventario.close();
+
+	for (long i = 0; i < cantidadDeStock; i++) {
+		agregarProducto(pilaFinal.pop());
+	}
+
+	cout << "Inventario modificado. El nuevo inventario es: " << endl;
+
+	imprimirInventario();
+
+}
+
+void Inventario::ventaProducto() {
+	
+	int id;
+	int changeto;
+	Producto* prod;
+	prod = new Producto;
+	long cantidadDeStock = nRegistros(*prod);
+	Pila<Producto> pilaInicial, pilaFinal;
+	imprimirInventario();
+
+	cout << "Teclee el ID del producto que desea vender: ";
+	cin >> id;
+	cout << endl;
+
+	cout << "Teclee cuantas unidades desea vender: ";
+	cin >> changeto;
+	cout << endl;
+
+	for (long i = 0; i < cantidadDeStock; i++) {
+		buscarRegistro(*prod, i);
+		if (prod->id == id) {
+			if (prod->cantidad >= changeto) {
+				prod->cantidad -= changeto;
+			}
+			else {
+				cerr << "Error: No puede vender mas productos de los que tiene en stock." << endl;
+				return;
+			}
+			pilaInicial.push(*prod);
+		}
+		else {
+			pilaInicial.push(*prod);
+		}
+	}
+
+	for (long i = 0; i < cantidadDeStock; i++) {
+		pilaFinal.push(pilaInicial.pop());
+	}
+
+	inventario.open("inventario.bin", ios::out | ios::trunc);
+	inventario.close();
+
+	for (long i = 0; i < cantidadDeStock; i++) {
+		agregarProducto(pilaFinal.pop());
+	}
+
+	cout << "Inventario modificado. El nuevo inventario es: " << endl;
+
+	imprimirInventario();
+}
+
 int main(int args, const char* argsv[]) {
 	Inventario invent;
-	invent.imprimirInventario();
 	return 0;
 }
