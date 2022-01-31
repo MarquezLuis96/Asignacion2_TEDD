@@ -1,5 +1,7 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <fstream>
+#include <time.h>
 
 using namespace std;
 
@@ -287,6 +289,21 @@ void Inventario::ventaProducto() {
 	cout << "Inventario modificado. El nuevo inventario es: " << endl;
 
 	imprimirInventario();
+}
+
+
+void guardaFechayHora(string mensaje) {
+	fstream log("log.txt", ios::out | ios::app);
+	if (!log) {
+		cerr << "Error al intentar guardar la hora y lafecha" << endl;
+		return;
+	}
+	char currDate[50];
+
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+	sprintf(currDate, "%d-%d-%d %d:%d:%d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+	log << mensaje << "		/ Fecha y Hora: " << currDate << " /" << endl;
 }
 
 int main(int args, const char* argsv[]) {
