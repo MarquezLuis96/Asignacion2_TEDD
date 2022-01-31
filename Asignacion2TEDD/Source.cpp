@@ -4,6 +4,9 @@
 #include <time.h>
 
 using namespace std;
+using std::cout; using std::cerr;
+using std::endl; using std::string;
+using std::ifstream;
 
 void guardaFechayHora(string mensaje) {
 	fstream log("log.txt", ios::out | ios::app);
@@ -16,7 +19,7 @@ void guardaFechayHora(string mensaje) {
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
 	sprintf(currDate, "%d-%d-%d %d:%d:%d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-	log << mensaje << "		/ Fecha y Hora: " << currDate << " /" << endl;
+	log << mensaje << "		/ Fecha y Hora: " << currDate << " /\n" << endl;
 	log.close();
 }
 
@@ -311,7 +314,76 @@ void Inventario::ventaProducto() {
 	guardaFechayHora(mensaje);
 }
 
+void imprimirLog() {
+	fstream log("log.txt", ios::in);
+	if (!log) {
+		cerr << "Error, el archivo log no se pudo abrir." << endl;
+		return;
+	}
+
+	string auxline;
+	while (log >> auxline) {
+		cout << auxline;
+	}
+
+	log.close();
+}
+
 int main(int args, const char* argsv[]) {
 	Inventario invent;
+	int opc;
+	do {
+		cout << "Seleccione una opcion: " << endl;
+		cout << "1) Agregar un producto" << endl;
+		cout << "2) Vender un producto" << endl;
+		cout << "3) Cambiar precio a un producto" << endl;
+		cout << "4) Imprimir inventario" << endl;
+		cout << "5) Imprimir Log de actividades" << endl;
+		cout << "0) Salir" << endl;
+		cin >> opc;
+
+		if (opc == 0) {
+			cout << "Hasta luego..." << endl;
+			break;
+		}
+
+		if (opc == 1) {
+			Producto nuevoProd;
+
+			cout << "Ingrese el ID del producto: ";
+			cin >> nuevoProd.id;
+			cout << endl;
+
+			cout << "Ingrese el nombre del producto (Una sola palabra): ";
+			cin >> nuevoProd.nombre;
+			cout << endl;
+
+			cout << "Ingrese la cantidad del producto: ";
+			cin >> nuevoProd.cantidad;
+			cout << endl;
+
+			cout << "Ingrese el precio por unidad del producto: ";
+			cin >> nuevoProd.precio;
+			cout << endl;
+
+			invent.agregarProducto(nuevoProd);
+		}
+
+		if (opc == 2) {
+			invent.ventaProducto();
+		}
+
+		if (opc == 3) {
+			invent.modificarPrecio();
+		}
+
+		if (opc == 4) {
+			invent.imprimirInventario();
+		}
+
+		if (opc == 5) {
+			imprimirLog();
+		}
+	} while (true);
 	return 0;
 }

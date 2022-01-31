@@ -1,0 +1,16 @@
+Producto agregado al stock		/ Fecha y Hora: 2022-1-31 18:14:33 /
+
+Producto agregado al stock		/ Fecha y Hora: 2022-1-31 18:15:45 /
+
+Producto agregado al stock		/ Fecha y Hora: 2022-1-31 18:16:28 /
+
+Producto agregado al stock		/ Fecha y Hora: 2022-1-31 18:16:28 /
+
+Producto vendido		/ Fecha y Hora: 2022-1-31 18:16:28 /
+
+Producto agregado al stock		/ Fecha y Hora: 2022-1-31 18:17:1 /
+
+Producto agregado al stock		/ Fecha y Hora: 2022-1-31 18:17:1 /
+
+Modificacion de precio		/ Fecha y Hora: 2022-1-31 18:17:1 /
+
