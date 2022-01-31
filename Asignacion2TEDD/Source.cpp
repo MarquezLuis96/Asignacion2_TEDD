@@ -5,6 +5,21 @@
 
 using namespace std;
 
+void guardaFechayHora(string mensaje) {
+	fstream log("log.txt", ios::out | ios::app);
+	if (!log) {
+		cerr << "Error al intentar guardar la hora y lafecha" << endl;
+		return;
+	}
+	char currDate[50];
+
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+	sprintf(currDate, "%d-%d-%d %d:%d:%d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+	log << mensaje << "		/ Fecha y Hora: " << currDate << " /" << endl;
+	log.close();
+}
+
 template <class dataType>
 class Pila {
 	private:
@@ -151,6 +166,8 @@ void Inventario::agregarProducto(Producto p) {
 	}
 	inventario.write(reinterpret_cast<char*> (&p), sizeof(Producto));
 	inventario.close();
+	string mensaje = "Producto agregado al stock";
+	guardaFechayHora(mensaje);
 }
 
 void Inventario::buscarRegistro(Producto &prod, long registro) {
@@ -237,7 +254,8 @@ void Inventario::modificarPrecio() {
 	cout << "Inventario modificado. El nuevo inventario es: " << endl;
 
 	imprimirInventario();
-
+	string mensaje = "Modificacion de precio";
+	guardaFechayHora(mensaje);
 }
 
 void Inventario::ventaProducto() {
@@ -289,21 +307,8 @@ void Inventario::ventaProducto() {
 	cout << "Inventario modificado. El nuevo inventario es: " << endl;
 
 	imprimirInventario();
-}
-
-
-void guardaFechayHora(string mensaje) {
-	fstream log("log.txt", ios::out | ios::app);
-	if (!log) {
-		cerr << "Error al intentar guardar la hora y lafecha" << endl;
-		return;
-	}
-	char currDate[50];
-
-	time_t t = time(NULL);
-	struct tm tm = *localtime(&t);
-	sprintf(currDate, "%d-%d-%d %d:%d:%d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-	log << mensaje << "		/ Fecha y Hora: " << currDate << " /" << endl;
+	string mensaje = "Producto vendido";
+	guardaFechayHora(mensaje);
 }
 
 int main(int args, const char* argsv[]) {
